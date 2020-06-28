@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import useRawData from "./hooks/useRawData";
 import { HorizontalBar } from "react-chartjs-2";
+import "chartjs-plugin-datalabels";
 import {
   initialDayStr,
   finalDayStr,
@@ -9,7 +10,9 @@ import {
 } from "./constants";
 import moment from "moment";
 
-const dataSetDefault = {};
+const dataSetDefault = {
+  backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+};
 
 const sortByCount = (a, b) => {
   if (Number(a.count) > Number(b.count)) return -1;
@@ -26,12 +29,13 @@ const genData = (rawData, date, column) => {
   const sortedData = dataForDate(rawData[date].slice(1), columnIndex)
     .sort(sortByCount)
     .slice(0, 10);
+  const label = columnOptions.find((opt) => opt.value === column).label;
   return {
     labels: sortedData.map(({ state }) => state),
     datasets: [
       {
         ...dataSetDefault,
-        label: column,
+        label,
         data: sortedData.map(({ count }) => count),
       },
     ],
@@ -80,7 +84,19 @@ const Chart = () => {
         Run
       </button>
       <h5>Date: {currentDate.current}</h5>
-      {data && <HorizontalBar data={data} />}
+      {data && (
+        <HorizontalBar
+          data={data}
+          options={{
+            plugins: {
+              datalabels: {
+                display: true,
+                color: "black",
+              },
+            },
+          }}
+        />
+      )}
     </div>
   );
 };
