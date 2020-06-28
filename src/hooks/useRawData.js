@@ -20,8 +20,8 @@ function useRawData() {
   useEffect(() => {
     async function fetchData() {
       const promiseArray = [];
-      let currentDay = moment(initialDayStr);
-      const finalDay = moment(finalDayStr);
+      let currentDay = moment(initialDayStr, dateFormat);
+      const finalDay = moment(finalDayStr, dateFormat);
 
       while (currentDay <= finalDay) {
         const prom = new Promise((resolve) => {

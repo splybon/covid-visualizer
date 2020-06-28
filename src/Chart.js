@@ -25,6 +25,7 @@ const dataForDate = (data, columnIndex) =>
   data.map((arr) => ({ count: arr[columnIndex], state: arr[0] }));
 
 const genData = (rawData, date, column) => {
+  console.log("ra", rawData);
   const columnIndex = rawData[initialDayStr][0].indexOf(column);
   const sortedData = dataForDate(rawData[date].slice(1), columnIndex)
     .sort(sortByCount)
@@ -52,13 +53,15 @@ const Chart = () => {
   const runCycle = () => {
     if (!rawData) return;
     setData(genData(rawData, currentDate.current, column));
-    const newDate = moment(currentDate.current).add(1, "days");
+    const newDate = moment(currentDate.current, dateFormat).add(1, "days");
     currentDate.current = newDate.format(dateFormat);
   };
 
   const timeout = () => {
     runCycle();
-    if (moment(currentDate.current) < moment(finalDayStr)) {
+    if (
+      moment(currentDate.current, dateFormat) < moment(finalDayStr, dateFormat)
+    ) {
       timeoutRef.current = setTimeout(timeout, 500);
     }
   };
@@ -71,7 +74,9 @@ const Chart = () => {
         onChange={(event) => setColumn(event.target.value)}
       >
         {columnOptions.map(({ label, value }) => (
-          <option value={value}>{label}</option>
+          <option key={label} value={value}>
+            {label}
+          </option>
         ))}
       </select>{" "}
       <button
