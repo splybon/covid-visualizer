@@ -22,7 +22,7 @@ const sortByCount = (a, b) => {
 };
 
 const dataForDate = (data, columnIndex) =>
-  data.map((arr) => ({ count: arr[columnIndex], state: arr[0] }));
+  data.map((arr) => ({ count: Math.round(arr[columnIndex]), state: arr[0] }));
 
 const genData = (rawData, date, column) => {
   console.log("ra", rawData);
@@ -44,7 +44,7 @@ const genData = (rawData, date, column) => {
 };
 
 const Chart = () => {
-  const { rawData } = useRawData();
+  const { loading, rawData } = useRawData();
   const currentDate = useRef(initialDayStr);
   const timeoutRef = useRef(null);
   const [data, setData] = useState(null);
@@ -67,40 +67,45 @@ const Chart = () => {
   };
 
   return (
-    <div>
-      <h2>Charts by state</h2>
-      <select
-        value={column}
-        onChange={(event) => setColumn(event.target.value)}
-      >
-        {columnOptions.map(({ label, value }) => (
-          <option key={label} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>{" "}
-      <button
-        onClick={() => {
-          clearTimeout(timeoutRef.current);
-          currentDate.current = initialDayStr;
-          timeout();
-        }}
-      >
-        Run
-      </button>
-      <h5>Date: {currentDate.current}</h5>
-      {data && (
-        <HorizontalBar
-          data={data}
-          options={{
-            plugins: {
-              datalabels: {
-                display: true,
-                color: "black",
-              },
-            },
-          }}
-        />
+    <div className="chart">
+      {loading && <h2> Loading Data...</h2>}
+      {!loading && (
+        <React.Fragment>
+          <h2>COVID Visualization by state</h2>
+          <select
+            value={column}
+            onChange={(event) => setColumn(event.target.value)}
+          >
+            {columnOptions.map(({ label, value }) => (
+              <option key={label} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>{" "}
+          <button
+            onClick={() => {
+              clearTimeout(timeoutRef.current);
+              currentDate.current = initialDayStr;
+              timeout();
+            }}
+          >
+            Run
+          </button>
+          <h5>Date: {currentDate.current}</h5>
+          {data && (
+            <HorizontalBar
+              data={data}
+              options={{
+                plugins: {
+                  datalabels: {
+                    display: true,
+                    color: "black",
+                  },
+                },
+              }}
+            />
+          )}
+        </React.Fragment>
       )}
     </div>
   );

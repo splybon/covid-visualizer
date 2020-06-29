@@ -3,9 +3,12 @@ import { initialDayStr, finalDayStr, dateFormat } from "../constants";
 import moment from "moment";
 import Papa from "papaparse";
 
+const DATA_URL =
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/";
+
 const readData = (day, callback) => {
   const formattedDay = day.format(dateFormat);
-  Papa.parse(`/daily-reports/${day.format(dateFormat)}.csv`, {
+  Papa.parse(`${DATA_URL}${day.format(dateFormat)}.csv`, {
     download: true,
     complete: (results) => callback({ [formattedDay]: results.data }),
   });
