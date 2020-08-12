@@ -1,5 +1,5 @@
 export const initialDayStr = "04-12-2020";
-export const finalDayStr = "06-26-2020";
+export const finalDayStr = "08-10-2020";
 export const dateFormat = "MM-DD-YYYY";
 
 export const columnOptions = [
