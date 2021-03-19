@@ -13,11 +13,17 @@ code {
 }
 
 .chart {
-  width: 50%;
+  margin: 50px;
 }
 
 @media only screen and (max-width: 1200px) {
   .chart {
     width: 100%;
   }
+}
+
+.App {
+  height: 100vh;
+  background-color: #fff;
+  display: flex;
 }
