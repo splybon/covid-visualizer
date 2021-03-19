@@ -1,5 +1,7 @@
+import moment from 'moment'
+
 export const initialDayStr = "04-12-2020";
-export const finalDayStr = "08-10-2020";
+export const finalDayStr = moment().subtract(3, 'days').format('MM-DD-YYYY');
 export const dateFormat = "MM-DD-YYYY";
 
 export const columnOptions = [

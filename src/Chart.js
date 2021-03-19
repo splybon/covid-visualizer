@@ -9,6 +9,9 @@ import {
   columnOptions,
 } from "./constants";
 import moment from "moment";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const dataSetDefault = {
   backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
@@ -25,7 +28,6 @@ const dataForDate = (data, columnIndex) =>
   data.map((arr) => ({ count: Math.round(arr[columnIndex]), state: arr[0] }));
 
 const genData = (rawData, date, column) => {
-  console.log("ra", rawData);
   const columnIndex = rawData[initialDayStr][0].indexOf(column);
   const sortedData = dataForDate(rawData[date].slice(1), columnIndex)
     .sort(sortByCount)
@@ -49,6 +51,8 @@ const Chart = () => {
   const timeoutRef = useRef(null);
   const [data, setData] = useState(null);
   const [column, setColumn] = useState("Deaths");
+  const [speed, setSpeed] = useState(500)
+  const [startDate, setStartDate] = useState(new Date(initialDayStr));
 
   const runCycle = () => {
     if (!rawData) return;
@@ -62,7 +66,7 @@ const Chart = () => {
     if (
       moment(currentDate.current, dateFormat) < moment(finalDayStr, dateFormat)
     ) {
-      timeoutRef.current = setTimeout(timeout, 500);
+      timeoutRef.current = setTimeout(timeout, speed);
     }
   };
 
@@ -72,6 +76,8 @@ const Chart = () => {
       {!loading && (
         <React.Fragment>
           <h2>COVID Visualization by state</h2>
+          <label>
+            Data Type &nbsp;
           <select
             value={column}
             onChange={(event) => setColumn(event.target.value)}
@@ -81,15 +87,40 @@ const Chart = () => {
                 {label}
               </option>
             ))}
-          </select>{" "}
+          </select>
+          </label>
+          <br />
+          <br />
+          <label>
+            Timeout Speed &nbsp;
+            <input type="text" value={speed} onChange={event => setSpeed(event.target.value)} />
+          </label>
+          <br />
+          <br />
+          <label>
+            Start Date &nbsp;
+          <DatePicker selected={startDate} onChange={date => {
+            currentDate.current = moment(date).format(dateFormat);
+            setStartDate(date);
+            }} />
+          </label>
+          <br />
+          <br />
           <button
             onClick={() => {
               clearTimeout(timeoutRef.current);
-              currentDate.current = initialDayStr;
               timeout();
             }}
           >
             Run
+          </button>
+          &nbsp;
+          <button
+            onClick={() => {
+              clearTimeout(timeoutRef.current);
+            }}
+          >
+            Stop
           </button>
           <h5>Date: {currentDate.current}</h5>
           {data && (
