@@ -47,7 +47,9 @@ const Chart = () => {
   const [data, setData] = useState(null);
   const [column, setColumn] = useState("Deaths");
   const [speed, setSpeed] = useState(100);
-  const [startDate, setStartDate] = useState(new Date(initialDayStr));
+  const [startDate, setStartDate] = useState(
+    new Date(initialDayStr.replace(/-/g, "/"))
+  );
 
   const clear = () => {
     currentDate.current = moment(startDate).format(dateFormat);
@@ -140,18 +142,22 @@ const Chart = () => {
           &nbsp;
           <button onClick={clear}>Stop</button>
           <h5>Date: {currentDate.current}</h5>
-          {data && (
-            <HorizontalBar
-              data={data}
-              options={{
-                plugins: {
-                  datalabels: {
-                    display: false,
+          <div class="chartContainer" style={{ flex: 1 }}>
+            {data && (
+              <HorizontalBar
+                data={data}
+                options={{
+                  // responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    datalabels: {
+                      display: false,
+                    },
                   },
-                },
-              }}
-            />
-          )}
+                }}
+              />
+            )}
+          </div>
         </React.Fragment>
       )}
     </div>
